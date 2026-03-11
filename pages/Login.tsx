@@ -27,6 +27,39 @@ const Login: React.FC = () => {
         avatar: 'bg-blue-500'
     });
 
+    const handleSignup = async () => {
+        if (step === 1) {
+            if (!name || !email || !password) throw new Error("Please fill all fields");
+            if (password.length < 6) throw new Error("Password must be at least 6 characters");
+            setStep(2);
+            setLoading(false);
+            return;
+        }
+
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        await setDoc(doc(db, "users", user.uid), {
+            name,
+            email,
+            role: 'Student',
+            ...profileData,
+            progress: { physics: 0, chemistry: 0, biology: 0, math: 0, cs: 0 },
+            createdAt: new Date().toISOString()
+        });
+        navigate('/home');
+    };
+
+    const handleLogin = async () => {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Fetch role to decide where to navigate
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        const role = userDoc.exists() ? userDoc.data().role : 'Student';
+
+        navigate(role === 'Teacher' ? '/teacher-dashboard' : '/student-dashboard');
+    };
+
     const handleAuth = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
@@ -34,34 +67,9 @@ const Login: React.FC = () => {
 
         try {
             if (isSignup) {
-                if (step === 1) {
-                    if (!name || !email || !password) throw new Error("Please fill all fields");
-                    if (password.length < 6) throw new Error("Password must be at least 6 characters");
-                    setStep(2);
-                    setLoading(false);
-                    return;
-                } else {
-                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                    const user = userCredential.user;
-                    await setDoc(doc(db, "users", user.uid), {
-                        name,
-                        email,
-                        role: 'Student',
-                        ...profileData,
-                        progress: { physics: 0, chemistry: 0, biology: 0, math: 0, cs: 0 },
-                        createdAt: new Date().toISOString()
-                    });
-                    navigate('/home');
-                }
+                await handleSignup();
             } else {
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
-
-                // Fetch role to decide where to navigate
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                const role = userDoc.exists() ? userDoc.data().role : 'Student';
-
-                navigate(role === 'Teacher' ? '/teacher-dashboard' : '/student-dashboard');
+                await handleLogin();
             }
         } catch (err: any) {
             setError(err.message || 'Authentication failed');
@@ -213,7 +221,7 @@ const Login: React.FC = () => {
                                 </div>
 
                                 <div className="pt-2">
-                                    <label className="block text-xs text-gray-400 mb-2 ml-1 uppercase">Choose Avatar</label>
+                                    <span className="block text-xs text-gray-400 mb-2 ml-1 uppercase">Choose Avatar</span>
                                     <div className="flex flex-wrap gap-3 justify-center">
                                         {AVATARS.map((av) => (
                                             <button
@@ -235,10 +243,12 @@ const Login: React.FC = () => {
                             disabled={loading}
                             className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold shadow-lg shadow-blue-600/20 transition-all transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
-                            {loading ? <Loader2 className="animate-spin" size={20} /> : (
-                                isSignup && step === 1 ? <>Next Step <ArrowRight size={20} /></> :
-                                    isSignup ? "Create Account" : "Log In"
+                            {loading && <Loader2 className="animate-spin" size={20} />}
+                            {!loading && isSignup && step === 1 && (
+                                <>Next Step <ArrowRight size={20} /></>
                             )}
+                            {!loading && isSignup && step === 2 && "Create Account"}
+                            {!loading && !isSignup && "Log In"}
                         </button>
                     </form>
                 </div>
