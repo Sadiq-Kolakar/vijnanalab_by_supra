@@ -32,6 +32,9 @@ const GlassCard: React.FC<GlassCardProps> = ({
     emerald: 'hover:shadow-emerald-500/30 hover:border-emerald-400/40',
     cyan: 'hover:shadow-cyan-500/30 hover:border-cyan-400/40',
     lime: 'hover:shadow-lime-500/30 hover:border-lime-400/40',
+    sky: 'hover:shadow-sky-500/30 hover:border-sky-400/40',
+    violet: 'hover:shadow-violet-500/30 hover:border-violet-400/40',
+    rose: 'hover:shadow-rose-500/30 hover:border-rose-400/40',
   };
 
   const glowClass = glowColors[color] || glowColors['gray'];

@@ -4,6 +4,7 @@ import ProjectArchitect from '../components/ProjectArchitect';
 import { motion } from 'framer-motion';
 import { Sparkles, BrainCircuit, Users, Compass } from 'lucide-react';
 import GlassCard from '../components/GlassCard';
+import AIPipeline from '../components/AIPipeline';
 
 const MotionDiv = motion.div as any;
 
@@ -57,6 +58,11 @@ const BrainstormHub: React.FC = () => {
             <section className="relative z-10 bg-white/5 backdrop-blur-3xl rounded-[40px] border border-white/10 shadow-2xl overflow-hidden p-8 md:p-12 mb-20 max-w-7xl mx-auto">
                 <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-amber-500 via-indigo-500 to-emerald-500 opacity-50"></div>
                 <ProjectArchitect />
+            </section>
+
+            {/* AI Technical Pipeline Section */}
+            <section className="relative z-10 max-w-7xl mx-auto mb-20">
+                <AIPipeline />
             </section>
         </div>
     );
