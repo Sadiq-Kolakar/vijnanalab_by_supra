@@ -235,9 +235,12 @@ const VernierCalipersLab3D: React.FC<{ hex: string }> = ({ hex }) => {
   const [particles, setParticles] = useState<Particle[]>([]);
   const [tab, setTab] = useState<'caliper' | 'table' | 'guide'>('caliper');
 
-  const result = vernierReading(diameter, zeroError);
-  const { msr, vsd, corrected } = result;
-  const coinciding = vsd;
+  const result = vernierReading(diameter / 10, zeroError / 10); // pass cm values
+  const raw_displayed_mm = result.displayed_value * 10;          // displayed in mm
+  const msr = Math.floor(raw_displayed_mm * 10) / 10;            // main scale (mm, 0.5mm res)
+  const vsd = Math.round((raw_displayed_mm - msr) / (LC * 10));  // vernier coinciding div
+  const coinciding = Math.max(0, Math.min(10, vsd));
+  const corrected = parseFloat((raw_displayed_mm - zeroError).toFixed(2)); // corrected mm
 
   const logReading = useCallback(() => {
     setReadings(prev => [...prev, corrected]);
@@ -355,9 +358,9 @@ const VernierCalipersLab3D: React.FC<{ hex: string }> = ({ hex }) => {
                   {[
                     ['n', `${readings.length} readings`],
                     ['Mean d̄', `${stats.mean.toFixed(3)} mm`],
-                    ['Std Dev σ', `${stats.std_dev.toFixed(3)} mm`],
-                    ['Max Error', `${stats.max_error.toFixed(3)} mm`],
-                    ['Result', `(${stats.mean.toFixed(2)} ± ${stats.std_dev.toFixed(2)}) mm`],
+                    ['Std Dev σ', `${stats.std_deviation.toFixed(3)} mm`],
+                    ['Max Error', `${stats.absolute_uncertainty.toFixed(3)} mm`],
+                    ['Result', `(${stats.mean.toFixed(2)} ± ${stats.std_deviation.toFixed(2)}) mm`],
                   ].map(([k,v]) => (
                     <div key={k} className="flex justify-between text-xs">
                       <span className="text-slate-500">{k}</span>
@@ -368,7 +371,7 @@ const VernierCalipersLab3D: React.FC<{ hex: string }> = ({ hex }) => {
                     <div className="mt-3 pt-3 border-t border-white/10">
                       <div className="text-[9px] text-slate-500 uppercase font-bold mb-1">Derived Quantity</div>
                       <div className="font-mono text-sm text-indigo-300">
-                        V = (4/3)π(d/2)³ = <strong className="text-white">{volume.toFixed(4)} cm³</strong>
+                        V = (4/3)π(d/2)³ = <strong className="text-white">{volume.volume.toFixed(4)} {volume.unit}</strong>
                       </div>
                     </div>
                   )}
