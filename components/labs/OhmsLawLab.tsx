@@ -134,9 +134,7 @@ const ObservationTable: React.FC<{ readings: Reading[]; onDelete: (i: number) =>
 );
 
 // ─── MAIN LAB COMPONENT ───────────────────────────────────────────────────────
-interface OhmsLawLabProps { hex: string; }
-
-const OhmsLawLab: React.FC<OhmsLawLabProps> = ({ hex }) => {
+const OhmsLawLab: React.FC<{ hex: string; onLog?: (data: any) => void }> = ({ hex, onLog }) => {
   const [voltage, setVoltage] = useState(6);
   const [resistance, setResistance] = useState(10);
   const [env, setEnv] = useState<EnvironmentState>(DEFAULT_ENV);
@@ -176,7 +174,8 @@ const OhmsLawLab: React.FC<OhmsLawLabProps> = ({ hex }) => {
 
   const logReading = useCallback(() => {
     setReadings(prev => [...prev, { V: V_live, I: I_live, R_calc: parseFloat((V_live / I_live).toFixed(2)) }]);
-  }, [V_live, I_live]);
+    onLog?.({ V: V_live, I: I_live, R_calc: V_live / I_live, uncertainty: 0.01 });
+  }, [V_live, I_live, onLog]);
 
   const resetAll = () => {
     setSweeping(false);

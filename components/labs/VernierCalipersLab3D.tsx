@@ -1,17 +1,5 @@
-
-/**
- * VernierCalipersLab3D
- * Features:
- *  - CSS 3D-perspective sliding jaw caliper
- *  - Animated vernier + main scale with zoom
- *  - Particle highlights on measurement points
- *  - Multiple readings data table with error analysis
- *  - Zero error correction input
- *  - Color-coded precision indicators
- */
 import React, { useState, useCallback } from 'react';
 import { Plus, Trash2, ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react';
-import ParticleEngine, { Particle, createSpark } from './ParticleEngine';
 import { vernierReading, sphereVolume, analyzeReadings } from '../../services/simulationEngine';
 
 const LC = 0.01; // Least count 0.01cm = 0.1mm
@@ -228,7 +216,7 @@ const ReadingDisplay: React.FC<{ msr: number; vsd: number; zeroError: number; lc
 };
 
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
-const VernierCalipersLab3D: React.FC<{ hex: string }> = ({ hex }) => {
+const VernierCalipersLab3D: React.FC<{ hex: string; onLog?: (data: any) => void }> = ({ hex, onLog }) => {
   const [diameter, setDiameter] = useState(25.0); // mm
   const [zeroError, setZeroError] = useState(0.0);   // mm
   const [readings, setReadings] = useState<number[]>([]);
@@ -244,9 +232,10 @@ const VernierCalipersLab3D: React.FC<{ hex: string }> = ({ hex }) => {
 
   const logReading = useCallback(() => {
     setReadings(prev => [...prev, corrected]);
+    onLog?.({ id: readings.length + 1, diameter: corrected, uncertainty: 0.05 });
     // Spark at measurement point
     setParticles(prev => [...prev, ...Array.from({ length: 12 }, () => createSpark(160, 100, '#a855f7'))]);
-  }, [corrected]);
+  }, [corrected, readings.length, onLog]);
 
   const stats = readings.length >= 2
     ? analyzeReadings(readings)

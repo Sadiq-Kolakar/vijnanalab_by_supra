@@ -1,8 +1,7 @@
-
 import React, { useState, useMemo } from 'react';
 import { 
   BarChart3, LineChart, History as HistoryIcon, 
-  Download, Activity, AlertCircle, ChevronRight,
+  Activity, AlertCircle, ChevronRight,
   Database, FileJson, FileText, TrendingUp
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -58,7 +57,7 @@ const ScientificWorkbench: React.FC<ScientificWorkbenchProps> = ({
       const headers = ['Timestamp', ...Object.keys(readings[0]?.data || {})].join(',');
       const rows = readings.map(r => [
         new Date(r.timestamp).toISOString(),
-        ...Object.values(r.data)
+        ...Object.values(r.data).map(v => typeof v === 'object' ? JSON.stringify(v) : v)
       ].join(','));
       content = [headers, ...rows].join('\n');
       type = 'text/csv';
@@ -228,7 +227,7 @@ const ScientificWorkbench: React.FC<ScientificWorkbenchProps> = ({
                        <ChevronRight size={10} className="text-slate-600 group-hover:text-blue-400 transition-colors" />
                     </div>
                     <div className="grid grid-cols-2 gap-2">
-                      {Object.entries(r.data).filter(([k]) => ['uncertainty', 'timestamp'].indexOf(k) === -1).map(([key, val]) => (
+                      {Object.entries(r.data).filter(([k]) => !['uncertainty', 'timestamp'].includes(k)).map(([key, val]) => (
                         <div key={key} className="flex flex-col">
                           <span className="text-[8px] text-slate-600 uppercase font-black">{key}</span>
                           <span className="text-[10px] text-white font-mono font-bold truncate">{typeof val === 'number' ? val.toFixed(3) : val}</span>
@@ -250,7 +249,7 @@ const ScientificWorkbench: React.FC<ScientificWorkbenchProps> = ({
 
       {/* Footer / Export */}
       <div className="p-4 bg-slate-950 border-t border-white/10 space-y-2">
-        <label className="text-[10px] text-slate-500 font-bold uppercase block pl-1">Data Exfiltration</label>
+        <span className="text-[10px] text-slate-500 font-bold uppercase block pl-1">Data Exfiltration</span>
         <div className="grid grid-cols-2 gap-2">
           <button 
             onClick={() => exportData('csv')}

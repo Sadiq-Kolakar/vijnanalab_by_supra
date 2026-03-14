@@ -15,6 +15,7 @@ import VernierCalipersLab3D from './labs/VernierCalipersLab3D';
 import ConcaveMirrorLab3D from './labs/ConcaveMirrorLab3D';
 import ScrewGaugeLab3D from './labs/ScrewGaugeLab3D';
 import LogicGatesLab from './labs/LogicGatesLab';
+import ScientificWorkbench from './ScientificWorkbench';
 
 interface SimulationStageProps {
   subjectId: string;
@@ -228,54 +229,83 @@ const LAB_SCENARIOS: Record<string, UniversalScenario> = {
 
 // --- MAIN STAGE ---
 const SimulationStage: React.FC<SimulationStageProps> = ({ subjectId, labId, hex, isActive }) => {
+    const [history, setHistory] = useState<any[]>([]);
+    const [wbOpen, setWbOpen] = useState(false);
+
     // Reset State on Lab Change
     useEffect(() => {
-        // Any global lab switch logic
+        setHistory([]);
+    }, [labId]);
+
+    const logMeasurement = (data: Record<string, any>) => {
+        setHistory(prev => [{
+            timestamp: Date.now(),
+            data
+        }, ...prev]);
+    };
+
+    // Workbench configs per lab
+    const wbConfig = useMemo(() => {
+        switch(labId) {
+            case 'p1': return { xKey: 'id', yKey: 'diameter', xLabel: 'Run #', yLabel: 'Diameter', xUnit: '', yUnit: 'mm' };
+            case 'p3': return { xKey: 'id', yKey: 'thickness', xLabel: 'Run #', yLabel: 'Thickness', xUnit: '', yUnit: 'mm' };
+            case 'p4': return { xKey: 'I', yKey: 'V', xLabel: 'Current', yLabel: 'Voltage', xUnit: 'A', yUnit: 'V' };
+            default: return { xKey: 'timestamp', yKey: 'value', xLabel: 'Time', yLabel: 'Value', xUnit: 's', yUnit: '' };
+        }
     }, [labId]);
 
     // --- RENDERERS ---
 
-    // P1: VERNIER CALIPERS — Full 3D visual lab
-    if (labId === 'p1') {
-        return <VernierCalipersLab3D hex={hex} />;
-    }
-
-    // P2: SIMPLE PENDULUM — Full interactive lab
-    if (labId === 'p2') {
-        return <PendulumLab hex={hex} />;
-    }
-
-    // P4: OHM'S LAW — Full interactive lab
-    if (labId === 'p4') {
-        return <OhmsLawLab hex={hex} />;
-    }
-
-    // P3: SCREW GAUGE — Full 3D visual lab
-    if (labId === 'p3') {
-        return <ScrewGaugeLab3D hex={hex} />;
-    }
-
-    // P5: CONCAVE MIRROR — Full 3D visual lab
-    if (labId === 'p5') {
-        return <ConcaveMirrorLab3D hex={hex} />;
-    }
-
-    // CS1: LOGIC GATES — Professional Logic Lab
-    if (labId === 'cs1') {
-        return <LogicGatesLab hex={hex} />;
-    }
-
-    // C1: TITRATION — Full 3D visual lab
-    if (labId === 'c1') {
-        return <TitrationLab3D hex={hex} />;
-    }
-
     // Fallback for others to procedural
     const scenario = LAB_SCENARIOS[labId];
-    if (scenario) return <RichProceduralLab scenario={scenario} labId={labId} hex={hex} />;
+    let content = <div className="flex items-center justify-center h-full text-gray-500 bg-slate-100 dark:bg-slate-900"><div className="text-center"><FlaskConical size={48} className="mx-auto mb-4 opacity-20" /><p>Select a specific module to begin.</p></div></div>;
 
-    // --- GENERIC FALLBACK (If somehow still missing) ---
-    return <div className="flex items-center justify-center h-full text-gray-500 bg-slate-100 dark:bg-slate-900"><div className="text-center"><FlaskConical size={48} className="mx-auto mb-4 opacity-20" /><p>Select a specific module to begin.</p></div></div>;
+    if (labId === 'p1') content = <VernierCalipersLab3D hex={hex} onLog={logMeasurement} />;
+    else if (labId === 'p2') content = <PendulumLab hex={hex} />;
+    else if (labId === 'p4') content = <OhmsLawLab hex={hex} onLog={logMeasurement} />;
+    else if (labId === 'p3') content = <ScrewGaugeLab3D hex={hex} onLog={logMeasurement} />;
+    else if (labId === 'p5') content = <ConcaveMirrorLab3D hex={hex} />;
+    else if (labId === 'cs1') content = <LogicGatesLab hex={hex} />;
+    else if (labId === 'c1') content = <TitrationLab3D hex={hex} />;
+    else if (scenario) content = <RichProceduralLab scenario={scenario} labId={labId} hex={hex} />;
+
+    return (
+        <div className="flex h-full w-full overflow-hidden">
+            <div className="flex-1 flex flex-col relative h-full">
+                {content}
+                
+                {/* Workbench Toggle */}
+                <button 
+                  onClick={() => setWbOpen(!wbOpen)}
+                  className="absolute bottom-6 right-6 p-3 rounded-full bg-blue-600 text-white shadow-2xl hover:scale-110 active:scale-95 transition-all z-50 group"
+                  title="Open Scientific Workbench"
+                >
+                  <Database size={20} className={wbOpen ? 'rotate-180' : ''} transition-transform />
+                  {history.length > 0 && !wbOpen && (
+                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-[10px] flex items-center justify-center font-bold">
+                      {history.length}
+                    </span>
+                  )}
+                </button>
+            </div>
+
+            <AnimatePresence>
+                {wbOpen && (
+                    <motion.div 
+                        initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
+                        className="h-full z-[60]"
+                    >
+                        <ScientificWorkbench 
+                            labId={labId}
+                            readings={history}
+                            onClearHistory={() => setHistory([])}
+                            {...wbConfig}
+                        />
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    );
 };
 
 export default SimulationStage;

@@ -1,5 +1,4 @@
-
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useRef } from 'react';
 import { Trash2, Download, ZoomIn, ZoomOut } from 'lucide-react';
 
 export interface GraphPoint { x: number; y: number; label?: string; }
