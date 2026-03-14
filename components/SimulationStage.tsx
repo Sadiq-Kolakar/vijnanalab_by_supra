@@ -8,6 +8,7 @@ import {
     Lightbulb, AlertTriangle, Gauge, ArrowRight, ArrowLeft, Cpu, Flame, Droplets, Ruler, Zap, Power, Eye, Microscope, Binary,
     Activity
 } from 'lucide-react';
+import ScientificPanel from './ScientificPanel';
 
 interface SimulationStageProps {
   subjectId: string;
@@ -280,48 +281,43 @@ const SimulationStage: React.FC<SimulationStageProps> = ({ subjectId, labId, hex
         const reading = (msr + (vsr * 0.1)).toFixed(2);
 
         return (
-            <div className="flex flex-col h-full bg-slate-100 dark:bg-slate-900">
-                <div className="flex-1 flex flex-col items-center justify-center relative bg-grid-pattern p-8 overflow-hidden">
-                    <div className="relative scale-110">
-                        {/* Main Scale */}
-                        <div className="relative w-[600px] h-16 bg-gray-300 border border-gray-500 rounded-l flex items-end">
-                            <div className="absolute left-0 bottom-0 h-32 w-4 bg-gray-300 border border-gray-500 rounded-bl"></div> {/* Fixed Jaw */}
-                            {Array.from({length: 21}).map((_, i) => (
-                                <div key={i} className="h-full flex flex-col justify-end ml-0.5" style={{ width: '28px' }}>
-                                    <div className={`w-px bg-black ${i % 5 === 0 ? 'h-8' : 'h-4'}`}></div>
-                                    {i % 5 === 0 && <span className="text-[10px] absolute -bottom-4 ml-[-4px]">{i}</span>}
+            <div className="flex h-full bg-slate-100 dark:bg-slate-900">
+                <div className="flex flex-col flex-1 overflow-hidden">
+                    <div className="flex-1 flex flex-col items-center justify-center relative bg-grid-pattern p-8 overflow-hidden">
+                        <div className="relative scale-110">
+                            <div className="relative w-[600px] h-16 bg-gray-300 border border-gray-500 rounded-l flex items-end">
+                                <div className="absolute left-0 bottom-0 h-32 w-4 bg-gray-300 border border-gray-500 rounded-bl"></div>
+                                {Array.from({length: 21}).map((_, i) => (
+                                    <div key={i} className="h-full flex flex-col justify-end ml-0.5" style={{ width: '28px' }}>
+                                        <div className={`w-px bg-black ${i % 5 === 0 ? 'h-8' : 'h-4'}`}></div>
+                                        {i % 5 === 0 && <span className="text-[10px] absolute -bottom-4 ml-[-4px]">{i}</span>}
+                                    </div>
+                                ))}
+                                <div className="absolute bottom-2 left-4 h-16 bg-orange-400/80 border-2 border-orange-600 rounded-full"
+                                    style={{ width: `${vernier.pos * 28}px`, opacity: vernier.pos > 0 ? 1 : 0 }}
+                                ></div>
+                                <div className="absolute top-0 h-full bg-gray-400/90 border border-gray-600 rounded cursor-ew-resize shadow-lg z-10"
+                                    style={{ left: `${vernier.pos * 28 + 14}px`, width: '120px' }}>
+                                    <div className="absolute bottom-[-64px] h-16 w-4 bg-gray-400 border border-gray-600 rounded-br shadow-md"></div>
+                                    <div className="absolute bottom-0 w-full flex justify-between px-2 pb-1">
+                                        {Array.from({length: 11}).map((_, i) => (<div key={i} className="w-px bg-black h-3"></div>))}
+                                    </div>
+                                    <div className="absolute -top-3 right-4 w-12 h-3 bg-gray-500 rounded-t"></div>
                                 </div>
-                            ))}
-                            
-                            {/* Object */}
-                            <div className="absolute bottom-2 left-4 h-16 bg-orange-400/80 border-2 border-orange-600 rounded-full" 
-                                style={{ width: `${vernier.pos * 28}px`, opacity: vernier.pos > 0 ? 1 : 0 }}
-                            ></div>
-
-                            {/* Vernier Scale (Moving) */}
-                            <div className="absolute top-0 h-full bg-gray-400/90 border border-gray-600 rounded cursor-ew-resize shadow-lg z-10" 
-                                style={{ left: `${vernier.pos * 28 + 14}px`, width: '120px' }}>
-                                <div className="absolute bottom-[-64px] h-16 w-4 bg-gray-400 border border-gray-600 rounded-br shadow-md"></div> {/* Moving Jaw */}
-                                <div className="absolute bottom-0 w-full flex justify-between px-2 pb-1">
-                                    {Array.from({length: 11}).map((_, i) => (
-                                        <div key={i} className={`w-px bg-black h-3`}></div>
-                                    ))}
-                                </div>
-                                {/* Thumbscrew */}
-                                <div className="absolute -top-3 right-4 w-12 h-3 bg-gray-500 rounded-t"></div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div className="bg-white dark:bg-slate-950 p-6 z-40 border-t border-slate-200 dark:border-white/10 flex gap-8 items-center">
-                    <div className="flex-1">
-                        <label className="text-xs text-slate-500 font-bold uppercase">Slide Jaws</label>
-                        <input type="range" min="0" max="10" step="0.05" value={vernier.pos} onChange={(e)=>setVernier({pos: parseFloat(e.target.value)})} className="w-full accent-blue-500"/>
+                    <div className="bg-white dark:bg-slate-950 p-6 z-40 border-t border-slate-200 dark:border-white/10 flex gap-8 items-center">
+                        <div className="flex-1">
+                            <label className="text-xs text-slate-500 font-bold uppercase">Slide Jaws (diameter)</label>
+                            <input type="range" min="0" max="10" step="0.05" value={vernier.pos} onChange={(e)=>setVernier({pos: parseFloat(e.target.value)})} className="w-full accent-blue-500"/>
+                        </div>
+                        <div className="bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-lg font-mono text-xl font-bold text-slate-900 dark:text-white border border-slate-200 dark:border-white/10">
+                            {reading} cm
+                        </div>
                     </div>
-                    <div className="bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-lg font-mono text-xl font-bold text-slate-900 dark:text-white border border-slate-200 dark:border-white/10">
-                        Reading: {reading} cm
-                    </div>
                 </div>
+                <ScientificPanel labId="p1" hex={hex} sliderValue={vernier.pos} />
             </div>
         );
     }
@@ -332,45 +328,41 @@ const SimulationStage: React.FC<SimulationStageProps> = ({ subjectId, labId, hex
         const y = Math.cos(pendulum.angle) * 300;
 
         return (
-            <div className="flex flex-col h-full bg-slate-100 dark:bg-slate-900">
-                <div className="flex-1 flex flex-col items-center justify-start pt-10 relative bg-grid-pattern overflow-hidden">
-                    {/* Support */}
-                    <div className="w-64 h-4 bg-gray-600 rounded mb-[-2px] z-10 shadow-lg"></div>
-                    
-                    {/* Thread */}
-                    <svg className="absolute top-10 left-1/2 -ml-[150px] w-[300px] h-[400px] overflow-visible pointer-events-none" style={{ marginLeft: 0 }}>
-                        <line x1="150" y1="0" x2={150 + x} y2={y} stroke="gray" strokeWidth="2" />
-                    </svg>
-
-                    {/* Bob */}
-                    <div 
-                        className="w-12 h-12 rounded-full bg-gradient-to-br from-slate-400 to-slate-600 border border-slate-700 shadow-xl absolute top-10"
-                        style={{ transform: `translate(${x}px, ${y}px) translateX(-50%)` }}
-                    ></div>
-                </div>
-                <div className="bg-white dark:bg-slate-950 p-6 z-40 border-t border-slate-200 dark:border-white/10 flex gap-8 items-center">
-                    <div className="flex-1">
-                        <label className="text-xs text-slate-500 font-bold uppercase">String Length (L)</label>
-                        <input type="range" min="0.5" max="2.0" step="0.1" value={pendulum.length} onChange={(e)=>setPendulum({...pendulum, length: parseFloat(e.target.value)})} className="w-full accent-blue-500"/>
-                        <div className="flex justify-between text-xs text-slate-400 mt-1">
-                            <span>0.5m</span>
-                            <span>{pendulum.length}m</span>
-                            <span>2.0m</span>
+            <div className="flex h-full bg-slate-100 dark:bg-slate-900">
+                <div className="flex flex-col flex-1 overflow-hidden">
+                    <div className="flex-1 flex flex-col items-center justify-start pt-10 relative bg-grid-pattern overflow-hidden">
+                        <div className="w-64 h-4 bg-gray-600 rounded mb-[-2px] z-10 shadow-lg"></div>
+                        <svg className="absolute top-10 left-1/2 -ml-[150px] w-[300px] h-[400px] overflow-visible pointer-events-none" style={{ marginLeft: 0 }}>
+                            <line x1="150" y1="0" x2={150 + x} y2={y} stroke="gray" strokeWidth="2" />
+                        </svg>
+                        <div
+                            className="w-12 h-12 rounded-full bg-gradient-to-br from-slate-400 to-slate-600 border border-slate-700 shadow-xl absolute top-10"
+                            style={{ transform: `translate(${x}px, ${y}px) translateX(-50%)` }}
+                        ></div>
+                    </div>
+                    <div className="bg-white dark:bg-slate-950 p-6 z-40 border-t border-slate-200 dark:border-white/10 flex gap-8 items-center">
+                        <div className="flex-1">
+                            <label className="text-xs text-slate-500 font-bold uppercase">String Length (L)</label>
+                            <input type="range" min="0.5" max="2.0" step="0.1" value={pendulum.length} onChange={(e)=>setPendulum({...pendulum, length: parseFloat(e.target.value)})} className="w-full accent-blue-500"/>
+                            <div className="flex justify-between text-xs text-slate-400 mt-1">
+                                <span>0.5m</span><span>{pendulum.length}m</span><span>2.0m</span>
+                            </div>
                         </div>
+                        <div className="text-center px-4">
+                            <div className="text-2xl font-mono font-bold text-slate-900 dark:text-white">{pendulum.period.toFixed(2)}s</div>
+                            <div className="text-xs text-slate-500 uppercase">Time Period (T)</div>
+                        </div>
+                        <button onClick={() => setRunning(!running)} className={`px-6 py-3 rounded-xl font-bold text-white shadow-lg transition-transform active:scale-95 ${running ? 'bg-red-500' : 'bg-green-500'}`}>
+                            {running ? 'Stop' : 'Oscillate'}
+                        </button>
                     </div>
-                    <div className="text-center px-4">
-                        <div className="text-2xl font-mono font-bold text-slate-900 dark:text-white">{pendulum.period.toFixed(2)}s</div>
-                        <div className="text-xs text-slate-500 uppercase">Time Period (T)</div>
-                    </div>
-                    <button onClick={() => setRunning(!running)} className={`px-6 py-3 rounded-xl font-bold text-white shadow-lg transition-transform active:scale-95 ${running ? 'bg-red-500' : 'bg-green-500'}`}>
-                        {running ? 'Stop' : 'Oscillate'}
-                    </button>
                 </div>
+                <ScientificPanel labId="p2" hex={hex} sliderValue={pendulum.length} />
             </div>
         );
     }
 
-    // P3: SCREW GAUGE (IMPROVED)
+    // P3: SCREW GAUGE
     if (labId === 'p3') {
         const pitch = 1; // 1mm
         const divisions = 100;
@@ -385,7 +377,8 @@ const SimulationStage: React.FC<SimulationStageProps> = ({ subjectId, labId, hex
         const thimblePos = totalRotations * pixelsPerMm;
 
         return (
-            <div className="flex flex-col h-full bg-slate-100 dark:bg-slate-900">
+            <div className="flex h-full bg-slate-100 dark:bg-slate-900">
+            <div className="flex flex-col flex-1 overflow-hidden">
                 <div className="flex-1 flex flex-col items-center justify-center relative p-8 select-none">
                     <div className="relative flex items-center scale-125 md:scale-150 transform transition-transform">
                         
@@ -452,10 +445,10 @@ const SimulationStage: React.FC<SimulationStageProps> = ({ subjectId, labId, hex
                 <div className="bg-white dark:bg-slate-950 p-6 z-40 border-t border-slate-200 dark:border-white/10 flex gap-8 items-center">
                     <div className="flex-1">
                         <label className="text-xs text-slate-500 font-bold uppercase mb-2 block">Rotate Thimble</label>
-                        <input 
-                            type="range" min="0" max="1000" step="1" 
-                            value={screw.rotation} 
-                            onChange={(e)=>setScrew({rotation: parseInt(e.target.value)})} 
+                        <input
+                            type="range" min="0" max="1000" step="1"
+                            value={screw.rotation}
+                            onChange={(e)=>setScrew({rotation: parseInt(e.target.value)})}
                             className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
                         />
                     </div>
@@ -465,6 +458,8 @@ const SimulationStage: React.FC<SimulationStageProps> = ({ subjectId, labId, hex
                     </div>
                 </div>
             </div>
+            <ScientificPanel labId="p3" hex={hex} sliderValue={screw.rotation} />
+        </div>
         );
     }
 
@@ -495,86 +490,48 @@ const SimulationStage: React.FC<SimulationStageProps> = ({ subjectId, labId, hex
         const imgIsVirtual = v > 0;  // Virtual image is behind mirror (right side)
 
         return (
-            <div className="flex flex-col h-full bg-slate-900">
-                <div className="flex-1 relative overflow-hidden">
-                    <svg className="w-full h-full" viewBox="0 0 800 400">
-                        {/* Principal Axis */}
-                        <line x1="0" y1={axisY} x2="800" y2={axisY} stroke="gray" strokeWidth="1" strokeDasharray="5,5" />
-                        
-                        {/* Mirror (Concave) */}
-                        <path d={`M ${mirrorX} ${axisY-100} Q ${mirrorX-30} ${axisY} ${mirrorX} ${axisY+100}`} stroke="#60a5fa" strokeWidth="3" fill="none" />
-                        <line x1={mirrorX} y1={axisY-105} x2={mirrorX} y2={axisY+105} stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
-                        
-                        {/* Points */}
-                        <circle cx={mirrorX} cy={axisY} r="3" fill="white" /> <text x={mirrorX+5} y={axisY+15} fill="white" fontSize="10">P</text>
-                        <circle cx={fX} cy={axisY} r="3" fill="yellow" /> <text x={fX} y={axisY+15} fill="yellow" fontSize="10">F</text>
-                        <circle cx={cX} cy={axisY} r="3" fill="cyan" /> <text x={cX} y={axisY+15} fill="cyan" fontSize="10">C</text>
-
-                        {/* Object (Arrow) */}
-                        <line x1={objX} y1={axisY} x2={objX} y2={axisY-objH} stroke="red" strokeWidth="3" markerEnd="url(#arrowheadRed)" />
-                        <text x={objX-10} y={axisY-objH-10} fill="red" fontSize="12">Object</text>
-
-                        {/* Image (Arrow) */}
-                        {isFinite(v) && (
-                            <g opacity={imgIsVirtual ? 0.6 : 1}>
-                                <line 
-                                    x1={imgX} y1={axisY} 
-                                    x2={imgX} y2={axisY + (imgIsInverted ? imgH : -imgH)} 
-                                    stroke="#4ade80" strokeWidth="3" 
-                                    strokeDasharray={imgIsVirtual ? "4,4" : ""}
-                                    markerEnd="url(#arrowheadGreen)" 
-                                />
-                                <text x={imgX} y={axisY + (imgIsInverted ? imgH+20 : -imgH-10)} fill="#4ade80" fontSize="12" textAnchor="middle">
-                                    {imgIsVirtual ? "Virtual Image" : "Real Image"}
-                                </text>
-                            </g>
-                        )}
-
-                        {/* Ray 1: Parallel to Axis -> Through Focus */}
-                        <path d={`M ${objX} ${axisY-objH} L ${mirrorX} ${axisY-objH} L ${imgIsVirtual ? 800 : (v < 0 ? imgX : 0)} ${imgIsVirtual ? axisY-objH + (800-mirrorX)*((objH)/(mirrorX-fX)) : axisY + (imgIsInverted ? imgH : -imgH)}`} stroke="yellow" strokeWidth="1" fill="none" opacity="0.5" />
-                        {/* Virtual Ray Extension Backwards */}
-                        {imgIsVirtual && (
-                             <line x1={mirrorX} y1={axisY-objH} x2={imgX} y2={axisY-imgH} stroke="yellow" strokeDasharray="4,4" strokeWidth="1" opacity="0.5"/>
-                        )}
-
-                        {/* Ray 2: Through Focus -> Parallel */}
-                        {/* (Simplified drawing for visual cue) */}
-                        
-                        {/* Definitions */}
-                        <defs>
-                            <marker id="arrowheadRed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-                                <polygon points="0 0, 10 3.5, 0 7" fill="red" />
-                            </marker>
-                            <marker id="arrowheadGreen" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-                                <polygon points="0 0, 10 3.5, 0 7" fill="#4ade80" />
-                            </marker>
-                        </defs>
-                    </svg>
-                </div>
-                
-                <div className="bg-slate-950 p-6 z-40 border-t border-white/10 flex gap-8 items-center">
-                    <div className="flex-1">
-                        <label className="text-xs text-slate-400 font-bold uppercase mb-2 block">Object Distance (u)</label>
-                        <input 
-                            type="range" min="5" max="60" step="1" 
-                            value={mirror.u} 
-                            onChange={(e)=>setMirror({u: parseInt(e.target.value)})} 
-                            className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
-                        />
-                        <div className="flex justify-between text-xs text-slate-500 mt-2">
-                            <span>5cm (Close)</span>
-                            <span>30cm (At C)</span>
-                            <span>60cm (Far)</span>
+            <div className="flex h-full bg-slate-900">
+                <div className="flex flex-col flex-1 overflow-hidden">
+                    <div className="flex-1 relative overflow-hidden">
+                        <svg className="w-full h-full" viewBox="0 0 800 400">
+                            <line x1="0" y1={axisY} x2="800" y2={axisY} stroke="gray" strokeWidth="1" strokeDasharray="5,5" />
+                            <path d={`M ${mirrorX} ${axisY-100} Q ${mirrorX-30} ${axisY} ${mirrorX} ${axisY+100}`} stroke="#60a5fa" strokeWidth="3" fill="none" />
+                            <line x1={mirrorX} y1={axisY-105} x2={mirrorX} y2={axisY+105} stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+                            <circle cx={mirrorX} cy={axisY} r="3" fill="white" /><text x={mirrorX+5} y={axisY+15} fill="white" fontSize="10">P</text>
+                            <circle cx={fX} cy={axisY} r="3" fill="yellow" /><text x={fX} y={axisY+15} fill="yellow" fontSize="10">F</text>
+                            <circle cx={cX} cy={axisY} r="3" fill="cyan" /><text x={cX} y={axisY+15} fill="cyan" fontSize="10">C</text>
+                            <line x1={objX} y1={axisY} x2={objX} y2={axisY-objH} stroke="red" strokeWidth="3" markerEnd="url(#arrowheadRed)" />
+                            <text x={objX-10} y={axisY-objH-10} fill="red" fontSize="12">Object</text>
+                            {isFinite(v) && (
+                                <g opacity={imgIsVirtual ? 0.6 : 1}>
+                                    <line x1={imgX} y1={axisY} x2={imgX} y2={axisY + (imgIsInverted ? imgH : -imgH)} stroke="#4ade80" strokeWidth="3" strokeDasharray={imgIsVirtual ? "4,4" : ""} markerEnd="url(#arrowheadGreen)" />
+                                    <text x={imgX} y={axisY + (imgIsInverted ? imgH+20 : -imgH-10)} fill="#4ade80" fontSize="12" textAnchor="middle">{imgIsVirtual ? "Virtual Image" : "Real Image"}</text>
+                                </g>
+                            )}
+                            <path d={`M ${objX} ${axisY-objH} L ${mirrorX} ${axisY-objH} L ${imgIsVirtual ? 800 : (v < 0 ? imgX : 0)} ${imgIsVirtual ? axisY-objH + (800-mirrorX)*((objH)/(mirrorX-fX)) : axisY + (imgIsInverted ? imgH : -imgH)}`} stroke="yellow" strokeWidth="1" fill="none" opacity="0.5" />
+                            {imgIsVirtual && (<line x1={mirrorX} y1={axisY-objH} x2={imgX} y2={axisY-imgH} stroke="yellow" strokeDasharray="4,4" strokeWidth="1" opacity="0.5"/>)}
+                            <defs>
+                                <marker id="arrowheadRed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="red" /></marker>
+                                <marker id="arrowheadGreen" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#4ade80" /></marker>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div className="bg-slate-950 p-6 z-40 border-t border-white/10 flex gap-8 items-center">
+                        <div className="flex-1">
+                            <label className="text-xs text-slate-400 font-bold uppercase mb-2 block">Object Distance (u)</label>
+                            <input type="range" min="5" max="60" step="1" value={mirror.u} onChange={(e)=>setMirror({u: parseInt(e.target.value)})} className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500" />
+                            <div className="flex justify-between text-xs text-slate-500 mt-2">
+                                <span>5cm (Close)</span><span>30cm (At C)</span><span>60cm (Far)</span>
+                            </div>
+                        </div>
+                        <div className="text-right">
+                            <div className="text-xs text-slate-500 uppercase font-bold">Image Properties</div>
+                            <div className={`text-sm font-bold ${v > 0 ? 'text-purple-400' : 'text-green-400'}`}>{v > 0 ? "Virtual, Erect" : "Real, Inverted"}</div>
+                            <div className="text-xs text-white">v = {Math.abs(v).toFixed(1)} cm</div>
                         </div>
                     </div>
-                    <div className="text-right">
-                        <div className="text-xs text-slate-500 uppercase font-bold">Image Properties</div>
-                        <div className={`text-sm font-bold ${v > 0 ? 'text-purple-400' : 'text-green-400'}`}>
-                            {v > 0 ? "Virtual, Erect" : "Real, Inverted"}
-                        </div>
-                        <div className="text-xs text-white">v = {Math.abs(v).toFixed(1)} cm</div>
-                    </div>
                 </div>
+                <ScientificPanel labId="p5" hex={hex} sliderValue={mirror.u} />
             </div>
         );
     }
@@ -645,7 +602,8 @@ const SimulationStage: React.FC<SimulationStageProps> = ({ subjectId, labId, hex
     // C1: TITRATION
     if (labId === 'c1') {
         return (
-            <div className="flex flex-col h-full bg-slate-100 dark:bg-slate-900">
+            <div className="flex h-full bg-slate-100 dark:bg-slate-900">
+                <div className="flex flex-col flex-1 overflow-hidden">
                 <div className="flex-1 flex items-center justify-center relative bg-gradient-to-br from-slate-200 to-white dark:from-slate-800 dark:to-black">
                     <div className="relative h-[450px] flex flex-col items-center">
                         <div className="w-8 h-64 border-x-2 border-b-2 border-slate-400 rounded-b-lg bg-white/20 relative overflow-hidden backdrop-blur-sm shadow-xl">
@@ -688,6 +646,8 @@ const SimulationStage: React.FC<SimulationStageProps> = ({ subjectId, labId, hex
                         </button>
                     </div>
                 </div>
+                </div>
+                <ScientificPanel labId="c1" hex={hex} sliderValue={titration.vol} />
             </div>
         );
     }
