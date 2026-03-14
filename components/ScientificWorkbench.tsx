@@ -4,7 +4,7 @@ import {
   Activity, AlertCircle, ChevronRight,
   Database, FileJson, FileText, TrendingUp
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import InteractiveGraph from './InteractiveGraph';
 
 interface Measurement {

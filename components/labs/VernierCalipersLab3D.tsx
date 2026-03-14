@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Plus, Trash2, ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react';
+import ParticleEngine, { Particle, createSpark } from './ParticleEngine';
 import { vernierReading, sphereVolume, analyzeReadings } from '../../services/simulationEngine';
 
 const LC = 0.01; // Least count 0.01cm = 0.1mm

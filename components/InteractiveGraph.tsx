@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Trash2, Download, ZoomIn, ZoomOut } from 'lucide-react';
 
 export interface GraphPoint { x: number; y: number; label?: string; }
@@ -17,8 +17,6 @@ interface InteractiveGraphProps {
   yLabel: string;
   xUnit?: string;
   yUnit?: string;
-  width?: number;
-  height?: number;
   showGrid?: boolean;
   title?: string;
   onPointClick?: (point: GraphPoint, seriesIdx: number) => void;
@@ -120,11 +118,11 @@ const InteractiveGraph: React.FC<InteractiveGraphProps> = ({
           {showGrid && (
             <g opacity="0.15">
               {ticks(xMin, xMax).map((v, i) => (
-                <line key={`vg${i}`} x1={toSvgX(v)} y1={PAD.top} x2={toSvgX(v)} y2={PAD.top + PH}
+                <line key={`vg-${v}-${i}`} x1={toSvgX(v)} y1={PAD.top} x2={toSvgX(v)} y2={PAD.top + PH}
                   stroke="currentColor" strokeWidth="1" className="text-slate-400 dark:text-white" />
               ))}
               {ticks(yMin, yMax).map((v, i) => (
-                <line key={`hg${i}`} x1={PAD.left} y1={toSvgY(v)} x2={PAD.left + PW} y2={toSvgY(v)}
+                <line key={`hg-${v}-${i}`} x1={PAD.left} y1={toSvgY(v)} x2={PAD.left + PW} y2={toSvgY(v)}
                   stroke="currentColor" strokeWidth="1" className="text-slate-400 dark:text-white" />
               ))}
             </g>
@@ -136,12 +134,12 @@ const InteractiveGraph: React.FC<InteractiveGraphProps> = ({
 
           {/* Tick labels */}
           {ticks(xMin, xMax).map((v, i) => (
-            <text key={`xl${i}`} x={toSvgX(v)} y={PAD.top + PH + 16} textAnchor="middle" fontSize="9" fill="#94a3b8">
+            <text key={`xl-${v}-${i}`} x={toSvgX(v)} y={PAD.top + PH + 16} textAnchor="middle" fontSize="9" fill="#94a3b8">
               {v.toFixed(2)}
             </text>
           ))}
           {ticks(yMin, yMax).map((v, i) => (
-            <text key={`yl${i}`} x={PAD.left - 6} y={toSvgY(v) + 3} textAnchor="end" fontSize="9" fill="#94a3b8">
+            <text key={`yl-${v}-${i}`} x={PAD.left - 6} y={toSvgY(v) + 3} textAnchor="end" fontSize="9" fill="#94a3b8">
               {v.toFixed(2)}
             </text>
           ))}
@@ -160,7 +158,7 @@ const InteractiveGraph: React.FC<InteractiveGraphProps> = ({
             const regX1 = xMin, regX2 = xMax;
 
             return (
-              <g key={si}>
+              <g key={`s-${si}-${s.label}`}>
                 {/* Line connecting points */}
                 {s.points.length > 1 && (
                   <polyline
@@ -186,7 +184,7 @@ const InteractiveGraph: React.FC<InteractiveGraphProps> = ({
                   const yTop = toSvgY(p.y + err);
                   const yBot = toSvgY(p.y - err);
                   return (
-                    <g key={`eb${pi}`} opacity="0.6">
+                    <g key={`eb-${si}-${pi}`} opacity="0.6">
                       <line x1={toSvgX(p.x)} y1={yTop} x2={toSvgX(p.x)} y2={yBot} stroke={s.color} strokeWidth="1" />
                       <line x1={toSvgX(p.x) - 3} y1={yTop} x2={toSvgX(p.x) + 3} y2={yTop} stroke={s.color} strokeWidth="1" />
                       <line x1={toSvgX(p.x) - 3} y1={yBot} x2={toSvgX(p.x) + 3} y2={yBot} stroke={s.color} strokeWidth="1" />
@@ -197,7 +195,7 @@ const InteractiveGraph: React.FC<InteractiveGraphProps> = ({
                 {/* Points */}
                 {s.points.map((p, pi) => (
                   <circle
-                    key={pi}
+                    key={`p-${si}-${pi}`}
                     cx={toSvgX(p.x)} cy={toSvgY(p.y)} r="4"
                     fill={s.color} stroke="white" strokeWidth="1.5"
                     style={{ cursor: 'pointer' }}
@@ -235,19 +233,24 @@ const InteractiveGraph: React.FC<InteractiveGraphProps> = ({
       {/* Legend */}
       <div className="flex flex-wrap gap-3 px-4 pb-2 pt-1 border-t border-slate-100 dark:border-white/10">
         {series.map((s, i) => (
-          <div key={i} className="flex items-center gap-1.5">
+          <div key={`lg-${s.label}-${i}`} className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded-full" style={{ backgroundColor: s.color }} />
             <span className="text-[10px] text-slate-500 dark:text-gray-400">{s.label}</span>
           </div>
         ))}
-        {series.map(s => linReg(s.points)).filter(Boolean).map((r, i) => (
-          <div key={`s${i}`} className="text-[10px] text-slate-400">
-            Slope = {r!.slope.toFixed(4)} {yUnit}/{xUnit}
-          </div>
-        ))}
+        {series.map((s, i) => {
+          const r = linReg(s.points);
+          if (!r) return null;
+          return (
+            <div key={`slope-${i}`} className="text-[10px] text-slate-400">
+              {s.label} Slope = {r.slope.toFixed(4)} {yUnit}/{xUnit}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 };
 
 export default InteractiveGraph;
+

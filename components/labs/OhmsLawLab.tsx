@@ -10,7 +10,7 @@
  *  - Step-by-step mode
  *  - Error analysis panel
  */
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useRef, useState } from 'react';
 import { Play, Pause, RotateCcw, Plus, Trash2, ChevronRight, ChevronLeft, Zap, Thermometer, Activity } from 'lucide-react';
 import InteractiveGraph from '../InteractiveGraph';
 import { ohmsLawReading, DEFAULT_ENV, EnvironmentState, gaussianNoise } from '../../services/simulationEngine';
@@ -151,7 +151,7 @@ const OhmsLawLab: React.FC<{ hex: string; onLog?: (data: any) => void }> = ({ he
   const R_at_T = result.R_true_at_T;
 
   // Auto-sweep: increment voltage automatically
-  useEffect(() => {
+  React.useEffect(() => {
     if (sweeping) {
       sweepRef.current = setInterval(() => {
         setVoltage(v => {
@@ -172,7 +172,7 @@ const OhmsLawLab: React.FC<{ hex: string; onLog?: (data: any) => void }> = ({ he
     return () => { if (sweepRef.current) clearInterval(sweepRef.current); };
   }, [sweeping, resistance]);
 
-  const logReading = useCallback(() => {
+  const logReading = React.useCallback(() => {
     setReadings(prev => [...prev, { V: V_live, I: I_live, R_calc: parseFloat((V_live / I_live).toFixed(2)) }]);
     onLog?.({ V: V_live, I: I_live, R_calc: V_live / I_live, uncertainty: 0.01 });
   }, [V_live, I_live, onLog]);
@@ -327,8 +327,8 @@ const OhmsLawLab: React.FC<{ hex: string; onLog?: (data: any) => void }> = ({ he
                 onChange={e => setEnv(ev => ({ ...ev, temperature_C: parseInt(e.target.value) }))}
                 className="w-full h-2 rounded accent-rose-500" />
               <div className="text-[9px] text-slate-400 mt-0.5">
-                R at T: <span className="font-mono font-bold">{R_at_T.toFixed(3)} Ω</span>
-                &nbsp;| α = 0.004 /°C
+                R at T: <span className="font-mono font-bold">{R_at_T.toFixed(3)} {'\u03A9'}</span>
+                &nbsp;| {'\u03B1'} = 0.004 /&deg;C
               </div>
             </div>
           </div>
