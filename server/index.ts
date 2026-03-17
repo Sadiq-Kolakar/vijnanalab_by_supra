@@ -39,7 +39,7 @@ app.get('/api/health', (_req, res) => {
 
 // ─── Start Server ────────────────────────────────────────────
 const startServer = async () => {
-  await connectDB();
+  // await connectDB();
   app.listen(PORT, () => {
     console.log(`\n🔬 Vijnana Lab API Server running on http://localhost:${PORT}`);
     console.log(`📡 Health check: http://localhost:${PORT}/api/health\n`);
