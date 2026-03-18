@@ -31,13 +31,14 @@ Sanskrit for systematic knowledge, science, or consciousness — reflects the pr
 
 *Note: Check `components/` and `pages/` for actual styling approach.
 ---
+
 ## 🚀 Quick Start (Run Locally)
 
 ### Prerequisites
 
 - Node.js ≥ 18
 - A Google Gemini API key [](https://aistudio.google.com/app/apikey)
----
+
 ### Steps
 
 1. **Clone the repository**
@@ -47,18 +48,17 @@ Sanskrit for systematic knowledge, science, or consciousness — reflects the pr
    cd vijnanalab_by_supra
 
 2. **Install dependenciesBashnpm install**
-```
-npm install
-```
+   ```bash
+   npm install
 3. **Create .env.local in the root and add your key:**
    ```env
    GEMINI_API_KEY=your-gemini-api-key-here
    ```
    | Important: Never commit .env.local — it's already in .gitignore
-5. **Start the development server**
+4. **Start the development server**
    ```Bash
    npm run dev
-Open http://localhost:5173 (or the port Vite shows)
+5. Open http://localhost:5173 (or the port Vite shows)
 ---
 
 📁 Project Structure
