@@ -53,6 +53,7 @@ Start the development serverBashnpm run dev
 pnpm devOpen http://localhost:5173 (or the port Vite shows)
 
 📁 Project Structure
+```
 textvijnanalab_by_supra/
 ├── components/         # Reusable UI components
 ├── pages/              # Route/page level components
@@ -71,6 +72,8 @@ textvijnanalab_by_supra/
 ├── package.json
 ├── .env.local          (create yourself – do NOT commit)
 └── README.md
+```
+
 🔑 Getting a Gemini API Key
 
 Go to → https://aistudio.google.com/app/apikey
