@@ -7,6 +7,7 @@ It integrates **Google Gemini API** for intelligent features and provides a clea
 Sanskrit for systematic knowledge, science, or consciousness — reflects the project's aim to create a thoughtful, AI-assisted lab-like environment.
 
 ---
+
 ## ✨ Features
 
 - Clean, modular React + TypeScript frontend
@@ -16,7 +17,9 @@ Sanskrit for systematic knowledge, science, or consciousness — reflects the pr
 - Authentication flow
 - Dedicated services layer for API clients & external integrations
 - Lightweight server-side logic folder (proxy, helpers, or custom endpoints)
+
 ---
+
 ## 🛠️ Tech Stack
 
 | Layer          | Technology                     |
@@ -30,6 +33,7 @@ Sanskrit for systematic knowledge, science, or consciousness — reflects the pr
 | Package Manager| npm / pnpm                     |
 
 *Note: Check `components/` and `pages/` for actual styling approach.
+
 ---
 
 ## 🚀 Quick Start (Run Locally)
@@ -59,6 +63,7 @@ Sanskrit for systematic knowledge, science, or consciousness — reflects the pr
    ```Bash
    npm run dev
 5. Open http://localhost:5173 (or the port Vite shows)
+
 ---
 
 📁 Project Structure
@@ -86,16 +91,17 @@ textvijnanalab_by_supra/
 
 🔑 Getting a Gemini API Key
 
-Go to → https://aistudio.google.com/app/apikey
-Sign in with Google account
-Create new API key
-Copy and paste into .env.local
+1.Go to → https://aistudio.google.com/app/apikey
+2.Sign in with Google account
+3.Create new API key
+4.Copy and paste into .env.local
 
 Rate limits and safety settings apply — refer to official Gemini documentation.
+
 ---
+
 🤝 Contributing
 Contributions are welcome!
-
 1.Fork the repo
 2.Create a feature branch (git checkout -b feature/amazing-thing)
 3.Commit changes (git commit -m 'Add amazing thing')
