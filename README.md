@@ -4,7 +4,7 @@
 It integrates **Google Gemini API** for intelligent features and provides a clean, component-based React frontend with supporting backend/service logic.
 
 "Vijnana" (विज्ञान) — Sanskrit for systematic knowledge, science, or consciousness — reflects the project's aim to create a thoughtful, AI-assisted lab-like environment.
-
+---
 ## ✨ Features
 
 - Clean, modular React + TypeScript frontend
@@ -14,7 +14,7 @@ It integrates **Google Gemini API** for intelligent features and provides a clea
 - Authentication flow
 - Dedicated services layer for API clients & external integrations
 - Lightweight server-side logic folder (proxy, helpers, or custom endpoints)
-
+---
 ## 🛠️ Tech Stack
 
 | Layer          | Technology                     |
@@ -28,14 +28,14 @@ It integrates **Google Gemini API** for intelligent features and provides a clea
 | Package Manager| npm / pnpm                     |
 
 *Note: Check `components/` and `pages/` for actual styling approach.
-
+---
 ## 🚀 Quick Start (Run Locally)
 
 ### Prerequisites
 
 - Node.js ≥ 18
 - A Google Gemini API key [](https://aistudio.google.com/app/apikey)
-
+---
 ### Steps
 
 1. **Clone the repository**
@@ -51,7 +51,7 @@ Create .env.local in the root and add your key:envGEMINI_API_KEY=your-gemini-api
 Start the development serverBashnpm run dev
 # or
 pnpm devOpen http://localhost:5173 (or the port Vite shows)
-
+---
 📁 Project Structure
 ```
 textvijnanalab_by_supra/
@@ -73,7 +73,7 @@ textvijnanalab_by_supra/
 ├── .env.local          (create yourself – do NOT commit)
 └── README.md
 ```
-
+---
 🔑 Getting a Gemini API Key
 
 Go to → https://aistudio.google.com/app/apikey
