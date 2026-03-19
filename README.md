@@ -173,7 +173,7 @@ Contributions are completely welcome and highly appreciated! To help improve Vij
 
 ## ✦ License
 
-This project is open source and licensed under the MIT License. Feel free to use and modify it!
+This project is open source and licensed under the MIT [License](License). Feel free to use and modify it!
 
 ---
 
