@@ -1,7 +1,9 @@
 # Vijnana Lab
 
-**Vijnana Lab** is a modern web application that serves as an interactive experimentation platform / AI-powered workspace.  
+**Vijnana Lab** 
+is a modern web application that serves as an interactive experimentation platform / AI-powered workspace.  
 It integrates **Google Gemini API** for intelligent features and provides a clean, component-based React frontend with supporting backend/service logic.
+
 ---
 ## ✨ Features
 - Clean, modular React + TypeScript frontend
@@ -94,3 +96,5 @@ Everyone who has contributed commits & ideas
 ---
 Made with 💡 in India by TeamSupra
 Last major update: March 2026
+
+
