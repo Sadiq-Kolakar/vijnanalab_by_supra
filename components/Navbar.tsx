@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, Atom, LogIn, LogOut, User } from 'lucide-react';
 import { NAV_ITEMS } from '../constants';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { signOut } from 'firebase/auth';
 import { auth } from '../services/firebase';
 import { useAuth } from '../services/AuthContext';
@@ -18,7 +18,6 @@ const TITLES = [
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [titleIndex, setTitleIndex] = useState(0);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -27,13 +26,6 @@ const Navbar: React.FC = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
-  // Title rotation
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTitleIndex((prev) => (prev + 1) % TITLES.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
 
   const handleLogout = async () => {
     try {
@@ -45,29 +37,16 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-40 glass-nav h-20 px-6 md:px-12 flex items-center justify-between transition-colors duration-300">
+    <nav className="fixed top-0 left-0 right-0 z-40 glass-effect border-b border-white/5 h-20 px-6 md:px-12 flex items-center justify-between transition-colors duration-300">
       {/* Logo */}
-      <Link to="/home" className="flex items-center gap-3 group min-w-[200px]">
+      <Link to="/home" className="flex items-center gap-3 group">
         <div className="relative">
-          <div className="absolute inset-0 bg-emerald-500 blur-lg opacity-30 group-hover:opacity-60 transition-opacity"></div>
-          <Atom className="w-10 h-10 text-emerald-600 dark:text-emerald-400 relative z-10 transition-colors group-hover:rotate-180 duration-1000 ease-in-out" />
+          <Atom className="w-10 h-10 text-cyan-400 relative z-10 transition-transform group-hover:rotate-180 duration-1000 ease-in-out" />
         </div>
         <div className="flex flex-col justify-center">
-          <AnimatePresence mode="wait">
-            <MotionSpan
-              key={titleIndex}
-              initial={{ y: 10, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -10, opacity: 0 }}
-              transition={{ duration: 0.5 }}
-              className="text-xl md:text-2xl font-display font-bold text-slate-900 dark:text-white tracking-tight leading-none"
-            >
-              {TITLES[titleIndex].text.split(' ')[0]}{" "}
-              <span className="text-emerald-600 dark:text-emerald-400">
-                {TITLES[titleIndex].text.split(' ')[1]}
-              </span>
-            </MotionSpan>
-          </AnimatePresence>
+            <span className="text-xl md:text-2xl font-bold text-white tracking-tight leading-none">
+              Vijnana <span className="text-cyan-400">Lab</span>
+            </span>
         </div>
       </Link>
 
@@ -137,7 +116,7 @@ const Navbar: React.FC = () => {
           </div>
         ) : (
           <Link to="/login">
-            <button className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-blue-600 hover:bg-blue-500 text-sm font-bold text-white">
+            <button className="btn-primary">
               <LogIn size={16} /> Log In
             </button>
           </Link>

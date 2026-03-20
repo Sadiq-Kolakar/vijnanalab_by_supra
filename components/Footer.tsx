@@ -42,28 +42,14 @@ const Footer: React.FC = () => {
           
           {/* Brand Section */}
           <div className="space-y-4">
-             <Link to="/" className="flex items-center gap-2 group">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-emerald-500 blur-lg opacity-30 group-hover:opacity-60 transition-opacity"></div>
-                  <Atom className="w-8 h-8 text-emerald-400 relative z-10" />
-                </div>
-                <div className="flex flex-col justify-center">
-                    <AnimatePresence mode="wait">
-                        <MotionSpan 
-                            key={titleIndex}
-                            initial={{ y: 5, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            exit={{ y: -5, opacity: 0 }}
-                            transition={{ duration: 0.5 }}
-                            className="text-2xl font-display font-bold text-white tracking-tight leading-none whitespace-nowrap text-glow"
-                        >
-                            {TITLES[titleIndex].text.split(' ')[0]} <span className="text-emerald-400">{TITLES[titleIndex].text.split(' ')[1]}</span>
-                        </MotionSpan>
-                    </AnimatePresence>
-                </div>
+             <Link to="/home" className="flex items-center gap-2 group">
+                <Atom className="w-8 h-8 text-cyan-400 relative z-10" />
+                <span className="text-2xl font-bold text-white tracking-tight leading-none whitespace-nowrap">
+                    Vijnana <span className="text-cyan-400">Lab</span>
+                </span>
             </Link>
             <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
-              Empowering the next generation of scientists with immersive virtual simulations and AI-driven mentorship.
+              Professional virtual laboratory platform for next-generation science education.
             </p>
             <div className="flex gap-4 pt-2">
               <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors"><Twitter size={20} /></a>
@@ -112,7 +98,7 @@ const Footer: React.FC = () => {
                 <button 
                   type="submit"
                   className={`absolute bottom-3 right-3 p-2.5 rounded-xl transition-all shadow-xl hover:scale-110 active:scale-95 ${
-                    sent ? 'bg-green-500 text-white' : 'bg-emerald-600 text-white hover:bg-emerald-500'
+                    sent ? 'bg-green-500 text-white' : 'btn-primary text-black'
                   }`}
                 >
                   {sent ? <Heart size={18} fill="currentColor" /> : <Send size={18} />}

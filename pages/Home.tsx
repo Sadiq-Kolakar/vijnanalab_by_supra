@@ -1,403 +1,171 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Bot, FlaskConical, ShieldCheck, Trophy, Clock, Zap, Smile, GraduationCap, Users, Atom, Dna, Calculator, Sun, Moon, Sparkles, Lightbulb } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import GlassCard from '../components/GlassCard';
-import StudentToolkit from '../components/StudentToolkit';
-import { Atom3D, FloatingFloatingElement } from '../components/ThreeDElements';
-import { SUBJECTS } from '../constants';
-
-// Fix for Framer Motion type definitions in strict environments
-const MotionDiv = motion.div as any;
-const MotionSpan = motion.span as any;
-
-const TITLES = [
-  { sub: "Experience Science" },
-  { sub: "विज्ञान का अनुभव करें" },
-  { sub: "ವಿಜ್ಞಾನವನ್ನು ಅನುಭವಿಸಿ" }
-];
+import { ArrowRight, Bot, FlaskConical, Atom, Dna, Calculator, Sparkles, Binary } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const Home: React.FC = () => {
-  const [isDark, setIsDark] = useState(true);
-  const [titleIndex, setTitleIndex] = useState(0);
-
-  useEffect(() => {
-      const saved = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      
-      if (saved === 'light') {
-          setIsDark(false);
-          document.documentElement.classList.remove('dark');
-      } else if (saved === 'dark') {
-          setIsDark(true);
-          document.documentElement.classList.add('dark');
-      } else if (!prefersDark) {
-          setIsDark(true);
-          document.documentElement.classList.add('dark');
-      }
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTitleIndex((prev) => (prev + 1) % TITLES.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const toggleTheme = () => {
-      const newMode = !isDark;
-      setIsDark(newMode);
-      if (newMode) {
-          document.documentElement.classList.add('dark');
-          localStorage.setItem('theme', 'dark');
-      } else {
-          document.documentElement.classList.remove('dark');
-          localStorage.setItem('theme', 'light');
-      }
-  };
-
   return (
-    <div className="w-full min-h-screen pt-24 pb-12 relative overflow-hidden">
-      
-      {/* Theme Toggle Button */}
-      <button 
-        onClick={toggleTheme}
-        className="fixed top-24 right-6 z-50 p-3 rounded-full bg-white/10 dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 shadow-lg backdrop-blur-md text-slate-700 dark:text-yellow-300 hover:scale-110 transition-all"
-        title="Toggle Theme"
-      >
-          {isDark ? <Sun size={24} /> : <Moon size={24} className="text-slate-700" />}
-      </button>
-
-      {/* Ambient Background Particles */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-         {[...Array(15)].map((_, i) => (
-            <MotionDiv
-              key={i}
-              className="absolute rounded-full bg-blue-600/5 dark:bg-white/5 blur-sm"
-              initial={{
-                x: Math.random() * 100 + "%",
-                y: Math.random() * 100 + "%",
-                opacity: 0.3
-              }}
-              animate={{
-                y: ["0%", "100%"],
-                opacity: [0.3, 0.6, 0.3]
-              }}
-              transition={{
-                duration: Math.random() * 10 + 10,
-                repeat: Infinity,
-                ease: "linear",
-                delay: Math.random() * 5
-              }}
-              style={{
-                width: Math.random() * 4 + 2 + 'px',
-                height: Math.random() * 4 + 2 + 'px',
-              }}
-            />
-         ))}
-         {/* Floating Atoms Background */}
-         <FloatingFloatingElement delay={0} x={20} y={20} className="top-20 left-10 text-blue-600/10 dark:text-blue-500/10">
-            <Atom size={120} />
-         </FloatingFloatingElement>
-         <FloatingFloatingElement delay={2} x={-30} y={40} className="bottom-40 right-10 text-purple-600/10 dark:text-purple-500/10">
-            <Dna size={150} />
-         </FloatingFloatingElement>
-      </div>
-
+    <div className="w-full min-h-screen pt-24 pb-20">
       {/* Hero Section */}
-      <section className="relative w-full px-6 md:px-12 lg:px-20 flex flex-col md:flex-row items-center justify-between mb-24 z-10">
-        <div className="w-full md:w-1/2 z-10 space-y-6">
-          <MotionDiv 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+      <section className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 flex flex-col md:flex-row items-center justify-between py-20 gap-12">
+        {/* Left: Heading + Description + CTA */}
+        <div className="w-full md:w-1/2 space-y-8">
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
           >
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold leading-tight text-slate-900 dark:text-white drop-shadow-sm dark:drop-shadow-lg transition-colors min-h-[160px] md:min-h-[220px] text-glow">
-              <AnimatePresence mode="wait">
-                <MotionSpan
-                    key={titleIndex}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.5 }}
-                    className="block"
-                >
-                    {TITLES[titleIndex].sub}
-                </MotionSpan>
-              </AnimatePresence>
-              <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-sky-600 to-emerald-600 dark:from-indigo-400 dark:via-sky-400 dark:to-emerald-400 animate-gradient-x">
-                Like Never Before.
-              </span>
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6">
+              Vijnana <span className="text-gradient-cyan">Lab</span>
             </h1>
-            
-            <MotionDiv 
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3, duration: 0.8 }}
-                className="border-l-4 border-blue-500 pl-4 my-4"
-            >
-                <h2 className="text-xl md:text-2xl font-light text-blue-600 dark:text-blue-200 italic transition-colors">
-                    "Where learning becomes interactive, visual, and intelligent."
-                </h2>
-            </MotionDiv>
-
-            <MotionDiv 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.4, duration: 1 }}
-            >
-                <p className="text-lg text-slate-600 dark:text-gray-400 max-w-xl leading-relaxed transition-colors">
-                Master PCMB & CS concepts with immersive 3D virtual labs, interactive simulations, and a personalized AI Tutor.
-                </p>
-            </MotionDiv>
-            
-            <div className="flex gap-4 mt-8">
+            <p className="text-xl text-gray-400 leading-relaxed max-w-lg mb-8">
+              Experience science like never before. A professional virtual laboratory platform designed for the next generation of researchers and students.
+            </p>
+            <div className="flex flex-wrap gap-4">
               <Link to="/subjects">
-                <MotionDiv whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <button className="px-8 py-4 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-bold shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] transition-all duration-300 flex items-center gap-2 group">
-                    Start Learning <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-                    </button>
-                </MotionDiv>
+                <button className="btn-primary px-10 py-4 text-lg">
+                  Enter Laboratory <ArrowRight size={20} />
+                </button>
               </Link>
               <Link to="/tutor">
-                 <MotionDiv whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <button className="px-8 py-4 rounded-full glass-panel text-slate-900 dark:text-white font-bold hover:bg-slate-100 dark:hover:bg-white/10 border border-slate-200 dark:border-white/20 transition-all duration-300 flex items-center gap-2">
-                    AI Tutor <Bot size={20} className="text-emerald-600 dark:text-emerald-400 animate-bounce" />
-                    </button>
-                </MotionDiv>
+                <button className="btn-secondary px-10 py-4 text-lg">
+                  AI Tutor
+                </button>
               </Link>
             </div>
-          </MotionDiv>
+          </motion.div>
         </div>
 
-        {/* Right Side Animation (3D Atom) */}
-        <div className="w-full md:w-1/2 h-[400px] md:h-[500px] relative flex justify-center items-center mt-12 md:mt-0">
-            <MotionDiv 
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1, type: "spring" }}
-                className="relative"
-            >
-                <Atom3D />
-
-                {/* Floating Elements around Atom */}
-                <FloatingFloatingElement delay={0} x={-20} y={-15} className="-top-4 -right-4">
-                    <div className="glass-panel p-4 rounded-2xl border-purple-500/30 shadow-[0_0_15px_rgba(168,85,247,0.2)] backdrop-blur-xl">
-                        <FlaskConical className="text-purple-600 dark:text-purple-400 w-8 h-8" />
-                    </div>
-                </FloatingFloatingElement>
-                
-                <FloatingFloatingElement delay={1.5} x={20} y={15} className="bottom-10 -left-12">
-                    <div className="glass-panel p-4 rounded-2xl border-green-500/30 shadow-[0_0_15px_rgba(34,197,94,0.2)] backdrop-blur-xl">
-                        <div className="text-green-600 dark:text-green-400 font-mono font-bold text-xl">E=mc²</div>
-                    </div>
-                </FloatingFloatingElement>
-
-                <FloatingFloatingElement delay={3} x={15} y={-10} className="top-1/2 -right-20">
-                    <div className="glass-panel p-3 rounded-xl border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.2)] backdrop-blur-xl">
-                         <Calculator className="text-blue-600 dark:text-blue-400 w-6 h-6" />
-                    </div>
-                </FloatingFloatingElement>
-            </MotionDiv>
+        {/* Right: Product Preview */}
+        <div className="w-full md:w-1/2">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 0.2 }}
+            className="relative"
+          >
+            <div className="absolute inset-0 bg-cyan-500/10 blur-[100px] rounded-full pointer-events-none"></div>
+            <div className="relative glass-effect p-2 rounded-2xl border-subtle overflow-hidden shadow-2xl">
+              <img 
+                src="/vijnana_lab_preview.png" 
+                alt="Vijnana Lab Simulation Interface" 
+                className="rounded-xl w-full object-cover border border-white/5"
+              />
+            </div>
+            {/* Subtle Overlay Elements */}
+            <div className="absolute -top-6 -right-6 glass-effect p-4 rounded-xl border-subtle hidden lg:block">
+              <FlaskConical className="text-cyan-400 w-8 h-8" />
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Quick Tools Section */}
-      <section className="px-6 md:px-12 lg:px-20 pb-12 z-10 relative">
-        <StudentToolkit />
+      {/* Feature Cards Section */}
+      <section className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 py-20">
+        <div className="text-center mb-16 px-4">
+          <h2 className="text-4xl font-bold mb-4">Explore Disciplines</h2>
+          <p className="text-gray-400 max-w-2xl mx-auto">Comprehensive virtual environments for mastering PCMB and advanced AI technologies.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+          <FeatureCard 
+            title="Physics"
+            desc="Explore mechanics, optics, and quantum simulations with real-time data."
+            Icon={Atom}
+            link="/subjects/physics"
+            delay={0.1}
+          />
+          <FeatureCard 
+            title="Chemistry"
+            desc="Visualize molecular structures and perform safe chemical reactions."
+            Icon={FlaskConical}
+            link="/subjects/chemistry"
+            delay={0.2}
+          />
+          <FeatureCard 
+            title="Biology"
+            desc="Dive into cellular anatomy and complex genetic systems in 3D."
+            Icon={Dna}
+            link="/subjects/biology"
+            delay={0.3}
+          />
+          <FeatureCard 
+            title="Math"
+            desc="Master functions, calculus, and geometry through visual exploration."
+            Icon={Calculator}
+            link="/subjects/mathematics"
+            delay={0.4}
+          />
+          <FeatureCard 
+            title="AI Tutor"
+            desc="Personalized mentorship fueled by advanced generative science models."
+            Icon={Bot}
+            link="/tutor"
+            delay={0.5}
+            accent="green"
+          />
+        </div>
       </section>
 
-      {/* Subjects Grid */}
-      <section className="px-6 md:px-12 lg:px-20 py-16 z-10 relative">
-        <div className="flex justify-between items-end mb-12">
+      {/* Lab Blueprint / Research Section */}
+      <section className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 py-24 border-t border-white/5">
+        <div className="glass-effect p-12 md:p-16 rounded-3xl grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 className="text-3xl md:text-4xl font-display font-bold text-slate-900 dark:text-white mb-2 transition-colors">Explore Subjects</h2>
-            <p className="text-slate-600 dark:text-gray-400 transition-colors">Select a discipline to enter the lab.</p>
+            <h2 className="text-4xl font-bold mb-6">Brainstorm <span className="text-cyan-400">Hub</span></h2>
+            <p className="text-lg text-gray-400 mb-8 leading-relaxed">
+              Plan complex experiments, generate hypotheses, and blueprint apparatus setups with AI-driven architectural tools.
+            </p>
+            <Link to="/brainstorm">
+              <button className="btn-primary">
+                Explore Brainstorm Hub <Sparkles size={18} />
+              </button>
+            </Link>
+          </div>
+          <div className="relative glass-effect p-8 rounded-2xl border-subtle bg-black/20">
+            <div className="flex items-center gap-4 mb-6 border-b border-white/10 pb-4">
+              <div className="w-3 h-3 rounded-full bg-red-500/50"></div>
+              <div className="w-3 h-3 rounded-full bg-yellow-500/50"></div>
+              <div className="w-3 h-3 rounded-full bg-green-500/50"></div>
+              <span className="text-xs text-gray-500 font-mono">experiment_blueprint.json</span>
+            </div>
+            <pre className="text-sm font-mono text-cyan-300 overflow-x-auto no-scrollbar">
+              {`{
+  "project": "Vijnana Research #42",
+  "topic": "Electromagnetic Induction",
+  "setup": "Dual-Coil Configuration",
+  "hypothesis": "Induced EMF is proportional to dB/dt",
+  "status": "Ready for Simulation"
+}`}
+            </pre>
           </div>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-          {SUBJECTS.map((subject, index) => (
-            <Link to={`/subjects/${subject.id}`} key={subject.id}>
-              <GlassCard 
-                className="h-full flex flex-col items-center justify-center text-center p-8 group" 
-                color={subject.color}
-              >
-                <div 
-                    className="w-16 h-16 rounded-2xl mb-6 flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3"
-                    style={{ backgroundColor: `${subject.hex}20`, boxShadow: `0 0 30px ${subject.hex}40` }}
-                >
-                  <subject.icon size={32} style={{ color: subject.hex }} />
-                </div>
-                <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2 transition-colors">{subject.name}</h3>
-                <p className="text-sm text-slate-600 dark:text-gray-400 line-clamp-3 transition-colors">{subject.description}</p>
-              </GlassCard>
-            </Link>
-          ))}
-        </div>
       </section>
-
-      {/* Brainstorm Hub / Promo */}
-      <section className="px-6 md:px-12 lg:px-20 py-16 mb-12 z-10 relative">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <div className="order-2 lg:order-1">
-                <h2 className="text-4xl md:text-5xl font-display font-bold text-white mb-6 text-glow">Turn Curiosity into <br/><span className="text-amber-500">Structured Research.</span></h2>
-                <p className="text-lg text-slate-400 mb-8 leading-relaxed">Our new **Project Architect** helps you plan complex experiments, generate hypotheses, and blueprint apparatus setups in seconds. Perfect for science fairs and advanced research projects.</p>
-                <Link to="/brainstorm">
-                    <MotionDiv whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <button className="px-8 py-4 bg-amber-600 text-white font-bold rounded-2xl hover:bg-amber-500 transition-all shadow-lg shadow-amber-600/20 flex items-center gap-2">
-                            Go to Brainstorm Hub <Sparkles size={20} />
-                        </button>
-                    </MotionDiv>
-                </Link>
-            </div>
-            <div className="order-1 lg:order-2 relative">
-                <div className="absolute inset-0 bg-amber-500/20 blur-[100px] rounded-full"></div>
-                <GlassCard color="amber" className="relative z-10 p-4 border-amber-500/30 overflow-hidden group">
-                    <img 
-                      src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&q=80&w=800" 
-                      alt="Brainstorming" 
-                      className="rounded-2xl w-full h-[300px] object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
-                    <div className="absolute bottom-6 left-6 right-6">
-                        <div className="flex items-center gap-3 text-white font-bold text-xl mb-1">
-                            <Lightbulb className="text-amber-500" /> AI Project Blueprinting
-                        </div>
-                        <p className="text-slate-300 text-sm">Empowering students to architect their own experiments.</p>
-                    </div>
-                </GlassCard>
-            </div>
-        </div>
-      </section>
-
-      {/* Features / Promo (Original) */}
-      <section className="px-6 md:px-12 lg:px-20 py-16 mb-12 z-10 relative">
-        <GlassCard className="relative overflow-hidden !p-0" color="sky">
-            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-indigo-600/10 to-emerald-600/10 dark:from-indigo-600/20 dark:to-emerald-600/20 animate-gradient-x"></div>
-            <div className="relative z-10 flex flex-col md:flex-row items-center">
-                <div className="p-12 md:w-2/3">
-                    <h2 className="text-3xl font-display font-bold mb-4 text-slate-900 dark:text-white">Stuck on a complex problem?</h2>
-                    <p className="text-slate-700 dark:text-gray-300 mb-8 text-lg">Our Vijnana Lab AI Tutor is available 24/7 to help you understand derivations, logic, and reactions.</p>
-                    <Link to="/tutor">
-                        <MotionDiv whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                            <button className="px-6 py-3 bg-blue-600 dark:bg-white text-white dark:text-blue-900 font-bold rounded-xl hover:bg-blue-700 dark:hover:bg-gray-100 transition-colors shadow-lg">
-                                Ask AI Tutor
-                            </button>
-                        </MotionDiv>
-                    </Link>
-                </div>
-                <div className="md:w-1/3 flex justify-center p-8">
-                    <MotionDiv animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}>
-                        <Bot size={120} className="text-slate-800 dark:text-white/80 drop-shadow-[0_0_15px_rgba(0,0,0,0.2)] dark:drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]" />
-                    </MotionDiv>
-                </div>
-            </div>
-        </GlassCard>
-      </section>
-
-      {/* Why Students & Teachers Love This Lab */}
-      <section className="px-6 md:px-12 lg:px-20 py-16 grid grid-cols-1 md:grid-cols-2 gap-8 z-10 relative">
-        
-        {/* Students */}
-        <GlassCard className="p-8 md:p-10 relative overflow-hidden group" color="indigo">
-            <div className="absolute top-0 right-0 p-10 opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110 duration-700 text-purple-600 dark:text-white">
-                 <Trophy size={120} />
-            </div>
-            <div className="relative z-10">
-                <div className="flex items-center gap-4 mb-8">
-                    <div className="w-14 h-14 rounded-2xl bg-indigo-500/20 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                        <Smile className="text-indigo-600 dark:text-indigo-400" size={28} />
-                    </div>
-                    <h2 className="text-2xl md:text-3xl font-display font-bold text-slate-900 dark:text-white">Students Love It</h2>
-                </div>
-                
-                <div className="space-y-6">
-                    <div className="flex gap-4 items-start">
-                        <div className="w-10 h-10 rounded-lg bg-black/5 dark:bg-white/5 flex items-center justify-center shrink-0 mt-1">
-                            <ShieldCheck className="text-green-600 dark:text-green-400" size={20} />
-                        </div>
-                        <div>
-                            <h3 className="font-bold text-slate-800 dark:text-white text-lg mb-1">No Fear of Failure</h3>
-                            <p className="text-sm text-slate-600 dark:text-gray-400 leading-relaxed">Explode virtual beakers or mess up circuits without any real-world consequences. It's the safest place to learn.</p>
-                        </div>
-                    </div>
-                    
-                    <div className="flex gap-4 items-start">
-                        <div className="w-10 h-10 rounded-lg bg-black/5 dark:bg-white/5 flex items-center justify-center shrink-0 mt-1">
-                            <Zap className="text-yellow-600 dark:text-yellow-400" size={20} />
-                        </div>
-                        <div>
-                            <h3 className="font-bold text-slate-800 dark:text-white text-lg mb-1">Gamified Learning</h3>
-                            <p className="text-sm text-slate-600 dark:text-gray-400 leading-relaxed">Interactive simulations and instant feedback make mastering complex concepts feel like playing a video game.</p>
-                        </div>
-                    </div>
-
-                    <div className="flex gap-4 items-start">
-                        <div className="w-10 h-10 rounded-lg bg-black/5 dark:bg-white/5 flex items-center justify-center shrink-0 mt-1">
-                            <Clock className="text-blue-600 dark:text-blue-400" size={20} />
-                        </div>
-                        <div>
-                            <h3 className="font-bold text-slate-800 dark:text-white text-lg mb-1">Learn Anytime</h3>
-                            <p className="text-sm text-slate-600 dark:text-gray-400 leading-relaxed">The lab is open 24/7. Practice experiments at 2 AM or right before your exam.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </GlassCard>
-
-        {/* Teachers */}
-         <GlassCard className="p-8 md:p-10 relative overflow-hidden group" color="emerald">
-            <div className="absolute top-0 right-0 p-10 opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110 duration-700 text-emerald-600 dark:text-white">
-                 <GraduationCap size={120} />
-            </div>
-            <div className="relative z-10">
-                <div className="flex items-center gap-4 mb-8">
-                    <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-                        <Users className="text-emerald-600 dark:text-emerald-400" size={28} />
-                    </div>
-                    <h2 className="text-2xl md:text-3xl font-display font-bold text-slate-900 dark:text-white">Teachers Love It</h2>
-                </div>
-                
-                <div className="space-y-6">
-                    <div className="flex gap-4 items-start">
-                        <div className="w-10 h-10 rounded-lg bg-black/5 dark:bg-white/5 flex items-center justify-center shrink-0 mt-1">
-                            <Clock className="text-yellow-600 dark:text-yellow-400" size={20} />
-                        </div>
-                        <div>
-                            <h3 className="font-bold text-slate-800 dark:text-white text-lg mb-1">Zero Setup Time</h3>
-                            <p className="text-sm text-slate-600 dark:text-gray-400 leading-relaxed">Skip the tedious apparatus arrangement. Start the class instantly and cover more syllabus in less time.</p>
-                        </div>
-                    </div>
-                    
-                    <div className="flex gap-4 items-start">
-                        <div className="w-10 h-10 rounded-lg bg-black/5 dark:bg-white/5 flex items-center justify-center shrink-0 mt-1">
-                            <ShieldCheck className="text-blue-600 dark:text-blue-400" size={20} />
-                        </div>
-                        <div>
-                            <h3 className="font-bold text-slate-800 dark:text-white text-lg mb-1">100% Safety</h3>
-                            <p className="text-sm text-slate-600 dark:text-gray-400 leading-relaxed">Eliminate risks of chemical burns or broken glass. Perfect for large classes where monitoring everyone is hard.</p>
-                        </div>
-                    </div>
-
-                    <div className="flex gap-4 items-start">
-                        <div className="w-10 h-10 rounded-lg bg-black/5 dark:bg-white/5 flex items-center justify-center shrink-0 mt-1">
-                            <Bot className="text-indigo-600 dark:text-indigo-400" size={20} />
-                        </div>
-                        <div>
-                            <h3 className="font-bold text-slate-800 dark:text-white text-lg mb-1">AI Co-Pilot</h3>
-                            <p className="text-sm text-slate-600 dark:text-gray-400 leading-relaxed">Our AI Tutor handles basic doubts and conceptual clarifications, letting you focus on advanced mentoring.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </GlassCard>
-
-      </section>
-
     </div>
+  );
+};
+
+const FeatureCard = ({ title, desc, Icon, link, delay, accent = 'cyan' }: { title: string, desc: string, Icon: any, link: string, delay: number, accent?: 'cyan' | 'green' }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay }}
+      viewport={{ once: true }}
+    >
+      <Link to={link} className="block group">
+        <div className="glass-effect p-8 rounded-2xl border-subtle card-hover h-full flex flex-col">
+          <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 transition-colors duration-300 ${accent === 'cyan' ? 'bg-cyan-500/10 group-hover:bg-cyan-500/20' : 'bg-green-500/10 group-hover:bg-green-500/20'}`}>
+            <Icon className={accent === 'cyan' ? 'text-cyan-400' : 'text-green-400'} size={28} />
+          </div>
+          <h3 className="text-2xl font-bold mb-3 group-hover:text-cyan-300 transition-colors">{title}</h3>
+          <p className="text-gray-400 text-sm leading-relaxed mb-6 flex-grow">{desc}</p>
+          <div className="flex items-center gap-2 text-sm font-semibold text-gray-500 group-hover:text-white transition-colors">
+            Learn more <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+          </div>
+        </div>
+      </Link>
+    </motion.div>
   );
 };
 

@@ -37,6 +37,21 @@ app.get('/api/health', (_req, res) => {
   });
 });
 
+// ─── Default Route ───────────────────────────────────────────
+app.get('/', (_req, res) => {
+  res.json({ 
+    status: 'Running',
+    version: '1.0.0',
+    endpoints: [
+      '/api/users',
+      '/api/labs',
+      '/api/brainstorm',
+      '/api/feedback',
+      '/api/health'
+    ]
+  });
+});
+
 // ─── Start Server ────────────────────────────────────────────
 const startServer = async () => {
   // await connectDB();
