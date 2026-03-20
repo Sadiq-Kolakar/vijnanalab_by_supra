@@ -174,14 +174,9 @@
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // --- CONFIGURATION ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyCAaWXN6qojbBL_bHOwVBhy8f1nAJHUVuQ", 
-            authDomain: "vijnanalab.firebaseapp.com",
-            projectId: "vijnanalab",
-            storageBucket: "vijnanalab.firebasestorage.app",
-            messagingSenderId: "407063617574",
-            appId: "1:407063617574:web:11f5ac68215576f5d6c6e7"
-        };
+        // Firebase config is injected at runtime via window.__FIREBASE_CONFIG__.
+        // Never hardcode credentials here. See .env.local and deployment docs.
+        const firebaseConfig = window.__FIREBASE_CONFIG__;
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);

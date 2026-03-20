@@ -12,14 +12,15 @@ import {
   updateDoc
 } from 'firebase/firestore';
 
-// Configuration
+// Configuration — values are loaded from environment variables.
+// Create a .env.local file (gitignored) with these keys set.
 const firebaseConfig = {
-  apiKey: "AIzaSyCAaWXN6qojbBL_bHOwVBhy8f1nAJHUVuQ", 
-  authDomain: "vijnanalab.firebaseapp.com",
-  projectId: "vijnanalab",
-  storageBucket: "vijnanalab.firebasestorage.app",
-  messagingSenderId: "407063617574",
-  appId: "1:407063617574:web:11f5ac68215576f5d6c6e7"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase (Robust pattern)
