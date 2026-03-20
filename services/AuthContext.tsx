@@ -21,9 +21,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // If Firebase failed to initialize, don't try to listen for auth changes
+    if (!auth) {
+      console.warn("Auth context skip: Firebase auth is not initialized.");
+      setLoading(false);
+      return;
+    }
+
     const unsub = onAuthStateChanged(auth, async (currentUser) => {
       try {
-        if (currentUser) {
+        if (currentUser && db) {
           setUser(currentUser);
 
           // Fetch role from Firestore
@@ -35,8 +42,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setRole('Student');
           }
         } else {
-          setUser(null);
-          setRole(null);
+          setUser(currentUser || null);
+          setRole(currentUser ? 'Student' : null);
         }
       } catch (error) {
         console.error("Auth context error:", error);

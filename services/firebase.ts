@@ -24,12 +24,27 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase (Robust pattern)
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-const auth = getAuth(app);
-const db = getFirestore(app);
+let app;
+let auth: any;
+let db: any;
 
-// Set default persistence
-setPersistence(auth, browserLocalPersistence).catch(err => console.error("Auth persistence error:", err));
+try {
+  // If API key is missing, this will throw a clearer error before React mounts
+  if (!firebaseConfig.apiKey || firebaseConfig.apiKey === 'undefined') {
+    throw new Error("Firebase API Key is missing from .env.local");
+  }
+  app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+  auth = getAuth(app);
+  db = getFirestore(app);
+  
+  // Set default persistence
+  setPersistence(auth, browserLocalPersistence).catch(err => console.error("Auth persistence error:", err));
+} catch (error) {
+  console.error("❌ Firebase Initialization Failed:", error);
+  // Export dummy/null objects so other files don't crash on import
+  auth = null;
+  db = null;
+}
 
 const googleProvider = new GoogleAuthProvider();
 
