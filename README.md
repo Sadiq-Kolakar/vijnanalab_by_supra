@@ -99,6 +99,21 @@ vijnanalab_by_supra/
 
 ---
 
+## Sample Screenshots
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/mahi-2-ron/vijnanalab_by_supra/master/assets/1.png" width="800" />
+  <img src="https://raw.githubusercontent.com/mahi-2-ron/vijnanalab_by_supra/master/assets/2.png" width="800" />
+  <img src="https://raw.githubusercontent.com/mahi-2-ron/vijnanalab_by_supra/master/assets/3.png" width="800" />
+  <img src="https://raw.githubusercontent.com/mahi-2-ron/vijnanalab_by_supra/master/assets/4.png" width="800" />
+  <img src="https://raw.githubusercontent.com/mahi-2-ron/vijnanalab_by_supra/master/assets/5.png" width="800" />
+  <img src="https://raw.githubusercontent.com/mahi-2-ron/vijnanalab_by_supra/master/assets/6.png" width="800" />
+  <img src="https://raw.githubusercontent.com/mahi-2-ron/vijnanalab_by_supra/master/assets/7.png" width="800" />
+</div>
+
+---
+
+
 ## ✦ Getting Started
 
 ### Prerequisites
